@@ -66,71 +66,24 @@ class MovieTrendingController extends Controller
             // $year_now=Carbon::now('Asia/Ho_Chi_Minh')->format('Y');
             // $date_views=Date_View::whereMonth('date',$month_now)->whereYear('date',$year_now)->get();
             $now=Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
-            $day = Carbon::today()->subDays(30)->format('Y-m-d');
+            $day = Carbon::today('Asia/Ho_Chi_Minh')->subDays(30)->format('Y-m-d');
             $date_views=Date_View::whereBetween('date',[$day,$now])->get();
             if(!$date_views->isEmpty()){
                 foreach($date_views as $date){
                     $arr[]=$date->id;
                 }
-                $views=View::whereIn('date_view_id',$arr)->orderBy('view','DESC')->take(10)->get();
+                $views=View::whereIn('date_view_id',$arr)->orderBy('view','DESC')->get();
                 $list_id_movies=[];
                 foreach($views as $v){
                     if(!in_array($v->movie_id,$list_id_movies)){
                         $list_id_movies[]=$v->movie_id;
                     }            
                 }
+                $dem=0;
                 foreach($list_id_movies as $list){
-                    $movie=Movie::where('id',$list)->first();
-                    $number_view=View::where('movie_id',$movie->id)->whereIn('date_view_id',$arr)->sum('view');
-                    switch($movie->resolution){
-                        case(0):
-                            $resolution='HD';
-                            break;
-                        case(1):
-                            $resolution='SD';
-                            break;
-                        case(2):
-                            $resolution='HDCam';
-                            break;
-                        case(3):
-                            $resolution='Cam';
-                            break;
-                        case(4):
-                            $resolution='FullHD';
-                    }
-                    if($number_view > 999999){
-                        $totalView=floor($number_view / 1000000).'M';
-                    }
-                    elseif($number_view > 999){
-                        $totalView=floor($number_view / 1000).'K';
-                    }else{
-                        $totalView=$number_view;
-                    }
-                    $data[]=[
-                        'movies'=>$movie,
-                        'resolution' =>$resolution,
-                        'totalView' =>$totalView
-                    ];
-                }
-                $output = view('render.movie_trending',compact('data'))->render();
-            }
-        }else{
-            $now=Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
-            $day = Carbon::today()->subDays(7)->format('Y-m-d');
-            $date_views=Date_View::whereBetween('date',[$day,$now])->get();
-            // $startOfWeek=Carbon::now()->startOfWeek()->format('Y-m-d');
-            // $endOfWeek=Carbon::now()->endOfWeek()->format('Y-m-d');
-            // $date_views=Date_View::whereBetween('date',[$startOfWeek,$endOfWeek])->get();
-            if(!$date_views->isEmpty()){ 
-                foreach($date_views as $date){
-                    $arr[]=$date->id;
-                }
-                $views=View::whereIn('date_view_id',$arr)->orderBy('view','DESC')->take(10)->get();
-                $list_id_movies=[];
-                foreach($views as $v){
-                    if(!in_array($v->movie_id,$list_id_movies)){
-                        $list_id_movies[]=$v->movie_id;
-                        $movie=Movie::where('id',$v->movie_id)->first();
+                    $dem++;
+                    if($dem < 11){
+                        $movie=Movie::where('id',$list)->first();
                         $number_view=View::where('movie_id',$movie->id)->whereIn('date_view_id',$arr)->sum('view');
                         switch($movie->resolution){
                             case(0):
@@ -161,6 +114,61 @@ class MovieTrendingController extends Controller
                             'resolution' =>$resolution,
                             'totalView' =>$totalView
                         ];
+                    }
+                }
+                $output = view('render.movie_trending',compact('data'))->render();
+            }
+        }else{
+            $now=Carbon::now('Asia/Ho_Chi_Minh')->format('Y-m-d');
+            $day = Carbon::today()->subDays(7)->format('Y-m-d');
+            $date_views=Date_View::whereBetween('date',[$day,$now])->get();
+            // $startOfWeek=Carbon::now()->startOfWeek()->format('Y-m-d');
+            // $endOfWeek=Carbon::now()->endOfWeek()->format('Y-m-d');
+            // $date_views=Date_View::whereBetween('date',[$startOfWeek,$endOfWeek])->get();
+            if(!$date_views->isEmpty()){ 
+                foreach($date_views as $date){
+                    $arr[]=$date->id;
+                }
+                $views=View::whereIn('date_view_id',$arr)->orderBy('view','DESC')->get();
+                $list_id_movies=[];
+                $dem=0;
+                foreach($views as $v){
+                    if(!in_array($v->movie_id,$list_id_movies)){
+                        $dem++;
+                        if($dem < 11){
+                            $list_id_movies[]=$v->movie_id;
+                            $movie=Movie::where('id',$v->movie_id)->first();
+                            $number_view=View::where('movie_id',$movie->id)->whereIn('date_view_id',$arr)->sum('view');
+                            switch($movie->resolution){
+                                case(0):
+                                    $resolution='HD';
+                                    break;
+                                case(1):
+                                    $resolution='SD';
+                                    break;
+                                case(2):
+                                    $resolution='HDCam';
+                                    break;
+                                case(3):
+                                    $resolution='Cam';
+                                    break;
+                                case(4):
+                                    $resolution='FullHD';
+                            }
+                            if($number_view > 999999){
+                                $totalView=floor($number_view / 1000000).'M';
+                            }
+                            elseif($number_view > 999){
+                                $totalView=floor($number_view / 1000).'K';
+                            }else{
+                                $totalView=$number_view;
+                            }
+                            $data[]=[
+                                'movies'=>$movie,
+                                'resolution' =>$resolution,
+                                'totalView' =>$totalView
+                            ];
+                        } 
                     }            
                 }
                 $output = view('render.movie_trending',compact('data'))->render();

@@ -56,8 +56,8 @@ class Director_actorController extends Controller
             }
             $message=[
                 'status'=>200,
-                'type'=>'update',
-                'title'=>'Cập nhật '.$type.' '.$request->name.' thành công !'
+                'type'=>'insert',
+                'title'=>'Thêm '.$type.' '.$request->name.' thành công !'
             ];
             
             return redirect()->back()->with('message',$message);

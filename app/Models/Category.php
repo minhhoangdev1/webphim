@@ -11,6 +11,6 @@ class Category extends Model
     use HasFactory;
 
     public function movie(){
-        return $this->hasMany(Movie::class)->where('status',1)->where('hide_or_show',1)->orderBy('date_updated','DESC');
+        return $this->hasMany(Movie::class)->where('status',1)->where('hide_or_show',1)->orderBy('date_updated','DESC')->orderBy('year','DESC');
     }
 }
