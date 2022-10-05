@@ -152,13 +152,13 @@
                         @endphp
                         <li class="current-menu-item {{($currentUrl=='/') ? 'active active-nav': ''}}"><a title="Trang Chủ" href="{{route('index')}}">Trang Chủ</a></li>
                         <li class="current-menu-item {{($currentUrl=='danh-muc/phim-moi') ? 'active active-nav': ''}}"><a title="Phim mới" href="{{route('category','phim-moi')}}">Phim mới</a></li>
-                        @foreach($category as $key => $cate)
+                        @foreach($category_home as $key => $cate)
                         <li class="current-menu-item {{($cate->slug=='phim-bo' && $currentUrl=='danh-muc/phim-bo') ||  ($cate->slug=='phim-le' && $currentUrl=='danh-muc/phim-le') || ($cate->slug=='phim-chieu-rap' && $currentUrl=='danh-muc/phim-chieu-rap')? 'active active-nav': ''}}"><a title="{{$cate->title}}" href="{{route('category',$cate->slug)}}">{{$cate->title}}</a></li>
                         @endforeach
                         <li class="mega dropdown {{($subUrl=='the-loai') ? 'active active-nav': ''}}">
                            <a title="Thể Loại" href="#" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true">Thể Loại <span class="caret"></span></a>
                            <ul role="menu" class=" dropdown-menu">
-                              @foreach($genre as $key => $gen)
+                              @foreach($genre_home as $key => $gen)
                               <li><a title="{{$gen->title}}" href="{{route('genre',$gen->slug)}}">{{$gen->title}}</a></li>
                               @endforeach
                            </ul>
@@ -166,7 +166,7 @@
                         <li class="mega dropdown {{($subUrl=='quoc-gia') ? 'active active-nav': ''}}">
                            <a title="Quốc Gia" href="#" data-toggle="dropdown" class="dropdown-toggle" aria-haspopup="true">Quốc Gia <span class="caret"></span></a>
                            <ul role="menu" class=" dropdown-menu">
-                              @foreach($country as $key => $cou)
+                              @foreach($country_home as $key => $cou)
                               <li><a title="{{$cou->title}}" href="{{route('country',$cou->slug)}}">{{$cou->title}}</a></li>
                               @endforeach
                            </ul>

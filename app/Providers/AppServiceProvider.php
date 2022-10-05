@@ -35,9 +35,9 @@ class AppServiceProvider extends ServiceProvider
         $phim_sap_chieu = Movie::where('status', 0)->where('hide_or_show', 1)->orderBy('date_updated', 'DESC')->take(5)->get();
 
         View::share([
-            'category' => $category,
-            'country' => $country,
-            'genre' => $genre,
+            'category_home' => $category,
+            'country_home' => $country,
+            'genre_home' => $genre,
             'phim_hot_sidebar' => $phim_hot_sidebar,
             'phim_sap_chieu' => $phim_sap_chieu,
         ]);
